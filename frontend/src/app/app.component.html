@@ -32,14 +32,14 @@
 
 
   <p-table [value]="documentos" [tableStyle]="{ 'min-width': '50rem' }">
-    <ng-template #header>
+    <ng-template pTemplate="header">
       <tr>
         <th>ID</th>
         <th>Arquivo</th>
         <th>Conteúdo</th>
       </tr>
     </ng-template>
-    <ng-template #body let-documento>
+    <ng-template pTemplate="body" let-documento>
       <tr>
         <td>{{documento.id}}</td>
         <td>{{documento.fileName}}</td>
