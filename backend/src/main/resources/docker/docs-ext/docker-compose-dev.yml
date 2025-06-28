@@ -1,0 +1,40 @@
+
+services:
+  docs-ext-tika:
+    container_name: docs-ext-tika
+    extends:
+      file: composes/tika.yaml
+      service: docs-ext-tika
+    networks:
+      - docs-ext-net
+
+  docs-ext-minio:
+    container_name: docs-ext-minio
+    extends:
+      file: composes/minio.yaml
+      service: docs-ext-minio
+    networks:
+      - docs-ext-net
+
+  docs-ext-elasticsearch:
+    container_name: docs-ext-elasticsearch
+    extends:
+      file: composes/elasticsearch.yaml
+      service: docs-ext-elasticsearch
+    networks:
+      - docs-ext-net
+
+  docs-ext-kibana:
+    container_name: docs-ext-kibana
+    extends:
+      file: composes/kibana.yaml
+      service: docs-ext-kibana
+    networks:
+      - docs-ext-net
+
+networks:
+  docs-ext-net:
+
+volumes:
+  docs_ext_minio_data:
+  docs_ext_es_data:

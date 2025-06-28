@@ -1,0 +1,8 @@
+
+services:
+  docs-ext-tika:
+    image: apache/tika:3.2.0.0-full
+    container_name: docs-ext-tika
+    ports:
+      - "9998:9998"
+    restart: unless-stopped
