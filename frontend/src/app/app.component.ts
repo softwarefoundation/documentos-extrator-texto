@@ -1,6 +1,7 @@
 import {Component} from '@angular/core';
 import {Filtro} from "./filtro.model";
 import {DocumentoService} from "./documento.service";
+import {Documento} from "./documento.model";
 
 @Component({
   selector: 'app-root',
@@ -15,6 +16,14 @@ export class AppComponent {
     texto: '',
   }
 
+  documentos: Documento[] = [
+    {
+      id: "1",
+      content: "Conteudo",
+      fileName: "pdf"
+    }
+  ];
+
 
   constructor(private documentoService: DocumentoService) {
   }
@@ -25,7 +34,8 @@ export class AppComponent {
     console.log('Pesquisar por: ', this.filtro);
 
     this.documentoService.buscarPorConteudo(this.filtro).subscribe(response => {
-      console.log('Response: ', response);
+      this.documentos = response;
+      console.log('Response: ', this.documentos);
     });
 
   }
