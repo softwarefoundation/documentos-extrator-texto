@@ -71,5 +71,16 @@ public class DocumentoController {
         }
     }
 
+    @GetMapping("/buscar-conteudo-highlight")
+    public ResponseEntity<?> buscarPorConteudoHighlight(@RequestParam String conteudo) {
+        try {
+            List<Documento> documentos = documentService.buscarPorConteudoHighlight(conteudo);
+            return ResponseEntity.ok(documentos);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().body("Erro na busca: " + e.getMessage());
+        }
+    }
+
 
 }
