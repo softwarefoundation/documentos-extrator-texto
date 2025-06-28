@@ -1,14 +1,17 @@
 package br.com.devchampions.documentosextratortexto.controller;
 
 import br.com.devchampions.documentosextratortexto.dto.Documento;
+import br.com.devchampions.documentosextratortexto.request.FiltroRequest;
 import br.com.devchampions.documentosextratortexto.service.DocumentService;
 import br.com.devchampions.documentosextratortexto.service.MinioService;
 import br.com.devchampions.documentosextratortexto.service.TikaIntegrationService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,8 +22,9 @@ import java.io.InputStream;
 import java.util.List;
 import java.util.UUID;
 
+@CrossOrigin(origins = "*")
 @RestController
-@RequestMapping("/documento")
+@RequestMapping(value = "/documento")
 public class DocumentoController {
 
     private final MinioService minioService;
@@ -60,10 +64,10 @@ public class DocumentoController {
                 .body(content);
     }
 
-    @GetMapping("/buscar-conteudo")
-    public ResponseEntity<?> buscarPorConteudo(@RequestParam String conteudo) {
+    @PostMapping("/buscar-conteudo")
+    public ResponseEntity<?> buscarPorConteudo(@RequestBody FiltroRequest request) {
         try {
-            List<Documento> documentos = documentService.buscarPorConteudo(conteudo);
+            List<Documento> documentos = documentService.buscarPorConteudo(request.getTexto());
             return ResponseEntity.ok(documentos);
         } catch (IOException e) {
             e.printStackTrace();

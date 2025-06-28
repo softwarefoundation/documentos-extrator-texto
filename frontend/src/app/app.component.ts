@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
-import { CardModule } from 'primeng/card';
+import {Component} from '@angular/core';
+import {Filtro} from "./filtro.model";
+import {DocumentoService} from "./documento.service";
 
 @Component({
   selector: 'app-root',
@@ -8,4 +9,24 @@ import { CardModule } from 'primeng/card';
 })
 export class AppComponent {
   title = 'frontend';
+
+
+  filtro: Filtro = {
+    texto: '',
+  }
+
+
+  constructor(private documentoService: DocumentoService) {
+  }
+
+
+  pesquisar() {
+
+    console.log('Pesquisar por: ', this.filtro);
+
+    this.documentoService.buscarPorConteudo(this.filtro).subscribe(response => {
+      console.log('Response: ', response);
+    });
+
+  }
 }
