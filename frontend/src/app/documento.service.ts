@@ -18,4 +18,8 @@ export class DocumentoService {
     return this.httpClient.post<any>(this.baseUrl, filtro);
   }
 
+  // visualizar(filtro: Filtro): Observable<any> {
+  //   return this.httpClient.get<any>(this.baseUrl, filtro);
+  // }
+
 }

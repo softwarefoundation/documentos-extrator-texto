@@ -37,6 +37,7 @@
         <th>ID</th>
         <th>Arquivo</th>
         <th>Conteúdo</th>
+        <th>Ação</th>
       </tr>
     </ng-template>
     <ng-template pTemplate="body" let-documento>
@@ -44,6 +45,9 @@
         <td>{{documento.id}}</td>
         <td>{{documento.fileName}}</td>
         <td>{{documento.content}}</td>
+        <td>
+          <p-button (click)="visualizar(documento.id)">Visualizar</p-button>
+        </td>
       </tr>
     </ng-template>
   </p-table>
