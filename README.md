@@ -12,6 +12,11 @@ For further reference, please consider the following sections:
 * [Validation](https://docs.spring.io/spring-boot/3.5.0/reference/io/validation.html)
 * [Spring Data Elasticsearch (Access+Driver)](https://docs.spring.io/spring-boot/3.5.0/reference/data/nosql.html#data.nosql.elasticsearch)
 
+### Swagger
+Documentação dos endpoints do Projeto
+* [Documentação Swagger](http://localhost:8080/swagger-ui/index.html#/)
+
+
 ### MinIO Object Storage
 Extração de texto e metadados de documentos
 * [Console de administração do MinIO](http://localhost:9001/login)
