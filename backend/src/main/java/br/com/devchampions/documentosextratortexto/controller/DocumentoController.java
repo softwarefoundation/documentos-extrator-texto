@@ -83,4 +83,27 @@ public class DocumentoController {
     }
 
 
+    @GetMapping("/buscar-conteudo-fuzzy")
+    public ResponseEntity<?> buscarPorConteudoFuzzy(@RequestParam String conteudo) {
+        try {
+            List<Documento> documentos = documentService.buscarPorConteudoFuzzy(conteudo);
+            return ResponseEntity.ok(documentos);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().body("Erro na busca: " + e.getMessage());
+        }
+    }
+
+    @GetMapping("/buscar-conteudo-wildcard")
+    public ResponseEntity<?> buscarPorConteudoWildcard(@RequestParam String conteudo) {
+        try {
+            List<Documento> documentos = documentService.buscarPorConteudoWildcard(conteudo);
+            return ResponseEntity.ok(documentos);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().body("Erro na busca: " + e.getMessage());
+        }
+    }
+
+
 }

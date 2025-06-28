@@ -1,12 +1,15 @@
 package br.com.devchampions.documentosextratortexto.service;
 
 import br.com.devchampions.documentosextratortexto.dto.Documento;
+import br.com.devchampions.documentosextratortexto.enums.FuzzinessEnum;
 import br.com.devchampions.documentosextratortexto.repository.DocumentRepository;
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch._types.ElasticsearchException;
+import co.elastic.clients.elasticsearch._types.query_dsl.FuzzyQuery;
 import co.elastic.clients.elasticsearch._types.query_dsl.MatchQuery;
 import co.elastic.clients.elasticsearch._types.query_dsl.Query;
 import co.elastic.clients.elasticsearch._types.query_dsl.QueryBuilders;
+import co.elastic.clients.elasticsearch._types.query_dsl.WildcardQuery;
 import co.elastic.clients.elasticsearch.core.SearchRequest;
 import co.elastic.clients.elasticsearch.core.SearchResponse;
 import co.elastic.clients.elasticsearch.core.search.Hit;
@@ -85,6 +88,60 @@ public class DocumentService {
                 .map(Hit::source)
                 .collect(Collectors.toList());
     }
+
+
+    public List<Documento> buscarPorConteudoFuzzy(String conteudo) throws IOException, ElasticsearchException {
+        FuzzyQuery fuzzyQuery = FuzzyQuery.of(b -> b
+                .field("content")
+                .value(conteudo)
+                .fuzziness(FuzzinessEnum.NIVEL_2.getValor())
+                .prefixLength(0)
+                .transpositions(true)
+                .rewrite(null)
+        );
+
+        SearchRequest request = SearchRequest.of(b -> b
+                .index("documents")
+                .query(Query.of(q -> q.fuzzy(fuzzyQuery)))
+                .size(50)
+        );
+
+        SearchResponse<Documento> response = elasticsearchClient.search(request, Documento.class);
+
+        return response.hits().hits().stream()
+                .map(Hit::source)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * * → Representa zero ou mais caracteres
+     * ? → Representa exatamente um caractere
+     *
+     * @param wildcard
+     * @return
+     * @throws IOException
+     * @throws ElasticsearchException
+     */
+    public List<Documento> buscarPorConteudoWildcard(String wildcard) throws IOException, ElasticsearchException {
+        WildcardQuery wildcardQuery = WildcardQuery.of(b -> b
+                .field("content")
+                .value(wildcard)
+                .caseInsensitive(true)
+        );
+
+        SearchRequest request = SearchRequest.of(b -> b
+                .index("documents")
+                .query(Query.of(q -> q.wildcard(wildcardQuery)))
+                .size(50)
+        );
+
+        SearchResponse<Documento> response = elasticsearchClient.search(request, Documento.class);
+
+        return response.hits().hits().stream()
+                .map(Hit::source)
+                .collect(Collectors.toList());
+    }
+
 
     public Page<Documento> buscarPorConteudo(String termo, Pageable pageable) throws IOException, ElasticsearchException {
         MatchQuery matchQuery = MatchQuery.of(b -> b
