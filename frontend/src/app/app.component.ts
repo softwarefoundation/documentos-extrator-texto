@@ -15,17 +15,35 @@ export class AppComponent {
   filtro: Filtro = {
     texto: '',
   }
-
-  documentos: Documento[] = [
-    {
-      id: "1",
-      content: "Conteudo",
-      fileName: "pdf"
-    }
-  ];
+  cols: any[] = [];
+  documentos: Documento[] = [];
 
 
   constructor(private documentoService: DocumentoService) {
+
+    this.cols = [
+      {
+        field: 'id',
+        header: 'ID'
+      },
+      {
+        field: 'content',
+        header: 'Conteúdo'
+      },
+      {
+        field: 'fileName',
+        header: 'Arquivo'
+      }
+    ];
+
+    this.documentos = [
+      {
+        id: "1",
+        content: "Conteudo",
+        fileName: "pdf"
+      }
+    ];
+
   }
 
 
