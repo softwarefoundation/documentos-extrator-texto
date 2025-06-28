@@ -1,6 +1,6 @@
 package br.com.devchampions.documentosextratortexto.controller;
 
-import br.com.devchampions.documentosextratortexto.dto.PdfDocument;
+import br.com.devchampions.documentosextratortexto.dto.Documento;
 import br.com.devchampions.documentosextratortexto.service.DocumentService;
 import br.com.devchampions.documentosextratortexto.service.MinioService;
 import br.com.devchampions.documentosextratortexto.service.TikaIntegrationService;
@@ -14,7 +14,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -35,18 +37,18 @@ public class DocumentoController {
     }
 
     @PostMapping("/upload")
-    public ResponseEntity<String> upload(@RequestParam("file") MultipartFile file) throws Exception {
+    public ResponseEntity<Documento> upload(@RequestParam("file") MultipartFile file) throws Exception {
         minioService.upload(file.getOriginalFilename(), file.getInputStream(), file.getContentType());
         String texto = this.tikaIntegrationService.extrairTextoDoDocumento(file);
 
-        PdfDocument document = new PdfDocument();
+        Documento document = new Documento();
         document.setId(UUID.randomUUID().toString());
         document.setFileName(file.getOriginalFilename());
         document.setContent(texto);
 
-        this.documentService.salvar(document);
+        Documento docResponse = this.documentService.salvar(document);
 
-        return ResponseEntity.ok("Upload realizado com sucesso!: \n" + texto);
+        return ResponseEntity.ok(docResponse);
     }
 
     @GetMapping("/download/{filename}")
@@ -57,5 +59,17 @@ public class DocumentoController {
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"")
                 .body(content);
     }
+
+    @GetMapping("/buscar-conteudo")
+    public ResponseEntity<?> buscarPorConteudo(@RequestParam String conteudo) {
+        try {
+            List<Documento> documentos = documentService.buscarPorConteudo(conteudo);
+            return ResponseEntity.ok(documentos);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return ResponseEntity.internalServerError().body("Erro na busca: " + e.getMessage());
+        }
+    }
+
 
 }

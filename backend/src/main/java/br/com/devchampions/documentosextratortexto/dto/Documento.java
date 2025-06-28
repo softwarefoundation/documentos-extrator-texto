@@ -1,5 +1,6 @@
 package br.com.devchampions.documentosextratortexto.dto;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,8 +14,9 @@ import org.springframework.data.elasticsearch.annotations.FieldType;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Document(indexName = "pdf_documents")
-public class PdfDocument {
+@JsonIgnoreProperties(ignoreUnknown = true)
+@Document(indexName = "documents")
+public class Documento {
 
     @Id
     private String id;

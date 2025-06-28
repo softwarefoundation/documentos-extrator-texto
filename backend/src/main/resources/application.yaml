@@ -1,8 +1,8 @@
 spring:
   application:
     name: documentos-extrator-texto
-#  elasticsearch:
-#    uris: http://localhost:9200
+  elasticsearch:
+    uris: http://localhost:9200
 #    username: elastic
 #    password: admin
 
