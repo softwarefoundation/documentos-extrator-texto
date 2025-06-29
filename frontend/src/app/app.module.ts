@@ -9,6 +9,7 @@ import {InputTextModule} from "primeng/inputtext";
 import {ButtonModule} from 'primeng/button';
 import {HttpClientModule} from "@angular/common/http";
 import {TableModule} from 'primeng/table';
+import {NgxDocViewerModule} from "ngx-doc-viewer";
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import {TableModule} from 'primeng/table';
     InputTextModule,
     ButtonModule,
     HttpClientModule,
-    TableModule
+    TableModule,
+    NgxDocViewerModule
   ],
   providers: [],
   bootstrap: [AppComponent]
