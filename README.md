@@ -31,10 +31,13 @@ Extração de texto e metadados de documentos
 * [TIKA Rest APIs](http://localhost:9998/)
 
 
-### Maven Parent overrides
+### ngx-extended-pdf-viewer
+https://pdfviewer.net/extended-pdf-viewer/getting-started
 
-Due to Maven's design, elements are inherited from the parent POM to the project POM.
-While most of the inheritance is fine, it also inherits unwanted elements like `<license>` and `<developers>` from the parent.
-To prevent this, the project POM contains empty overrides for these elements.
-If you manually switch to a different parent and actually want the inheritance, you need to remove those overrides.
+https://www.npmjs.com/package/ngx-extended-pdf-viewer?activeTab=versions
 
+
+
+### YOUTUBE
+
+Angular 14 Ngx Extended PDF Viewer: https://www.youtube.com/watch?v=ulNSwbMuzLI

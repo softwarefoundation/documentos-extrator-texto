@@ -9,6 +9,9 @@ import {InputTextModule} from "primeng/inputtext";
 import {ButtonModule} from 'primeng/button';
 import {HttpClientModule} from "@angular/common/http";
 import {TableModule} from 'primeng/table';
+import {NgxExtendedPdfViewerModule} from "ngx-extended-pdf-viewer";
+import {ExamplePdfViewerComponent} from "./example-pdf-viewer/example-pdf-viewer.component";
+import {DialogModule} from "primeng/dialog";
 
 @NgModule({
   declarations: [
@@ -22,7 +25,10 @@ import {TableModule} from 'primeng/table';
     InputTextModule,
     ButtonModule,
     HttpClientModule,
-    TableModule
+    TableModule,
+    NgxExtendedPdfViewerModule,
+    ExamplePdfViewerComponent,
+    DialogModule
   ],
   providers: [],
   bootstrap: [AppComponent]

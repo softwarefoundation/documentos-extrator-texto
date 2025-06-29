@@ -1,13 +1,3 @@
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-<!-- * * * * * * * * * * * The content below * * * * * * * * * * * -->
-<!-- * * * * * * * * * * is only a placeholder * * * * * * * * * * -->
-<!-- * * * * * * * * * * and can be replaced. * * * * * * * * * * * -->
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-<!-- * * * * * * * * * Delete the template below * * * * * * * * * * -->
-<!-- * * * * * * * to get started with your project! * * * * * * * * -->
-<!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
-
-<!-- Toolbar -->
 <div class="toolbar" role="banner">
   <img
     width="40"
@@ -51,6 +41,34 @@
       </tr>
     </ng-template>
   </p-table>
+
+
+
+  <p-dialog header="PDF Viewer" [modal]="true" [(visible)]="showDialog">
+
+<!--    <small>-->
+<!--      Copyright hint: the PDF file has been published by <a href="https://de.linkedin.com/in/stephan-rauh-a6a398aa">Stephan-->
+<!--      Rauh</a> on-->
+<!--      <a href="https://www.beyondjava.net/page/beyondjava-conference">BeyondJava.net</a> under a-->
+<!--      <a target="#" rel="license" href="https://creativecommons.org/licenses/by-nc-nd/3.0/de/">Creative Commons-->
+<!--        Attribution-NonCommercial-NoDerivs 3.0 Germany License.<br /></a> </small>-->
+
+
+
+  </p-dialog>
+
+<!--      <ngx-extended-pdf-viewer-->
+<!--        [src]="'/assets/documentos/DOU_EDICAO_79.pdf'"-->
+<!--        [height]="'auto'"-->
+<!--        [textLayer]="true"-->
+<!--        [showHandToolButton]="true"-->
+<!--        [filenameForDownload]="'DIÁRIO OFICIAL DA UNIÃO'">-->
+<!--      </ngx-extended-pdf-viewer>-->
+
+
+
+  <app-example-pdf-viewer></app-example-pdf-viewer>
+
 
 
 </div>
