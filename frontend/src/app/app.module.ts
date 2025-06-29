@@ -10,6 +10,7 @@ import {ButtonModule} from 'primeng/button';
 import {HttpClientModule} from "@angular/common/http";
 import {TableModule} from 'primeng/table';
 import {NgxDocViewerModule} from "ngx-doc-viewer";
+import {DialogModule} from "primeng/dialog";
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import {NgxDocViewerModule} from "ngx-doc-viewer";
     ButtonModule,
     HttpClientModule,
     TableModule,
-    NgxDocViewerModule
+    NgxDocViewerModule,
+    DialogModule
   ],
   providers: [],
   bootstrap: [AppComponent]

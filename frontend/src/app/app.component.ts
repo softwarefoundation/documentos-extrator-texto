@@ -18,6 +18,7 @@ export class AppComponent {
 
 
   documentos: Documento[] = [];
+  showDialog: boolean = true;
 
 
   constructor(private documentoService: DocumentoService) {
