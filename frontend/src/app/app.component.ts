@@ -44,7 +44,7 @@ export class AppComponent {
 
 
   visualizar(uuid: string) {
-    console.log('Visualziar por: ', uuid);
+    console.log('Visualizar por UUID: ', uuid);
 
     this.documentoService.visualizarFromUUID(uuid).subscribe(response => {
       this.pdfbase64 = response;
@@ -53,6 +53,9 @@ export class AppComponent {
   }
 
   onFileSelected(event: any) {
+
+    console.log('Arquivo Selecionado...');
+
     const file: File = event.target.files[0];
 
     this.documentoService.uploadPdf(file).subscribe({

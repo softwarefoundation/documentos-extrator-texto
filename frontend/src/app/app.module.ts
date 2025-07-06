@@ -13,6 +13,7 @@ import {NgxExtendedPdfViewerModule} from "ngx-extended-pdf-viewer";
 import {ExamplePdfViewerComponent} from "./example-pdf-viewer/example-pdf-viewer.component";
 import {DialogModule} from "primeng/dialog";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {FileUploadModule} from "primeng/fileupload";
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
     NgxExtendedPdfViewerModule,
     ExamplePdfViewerComponent,
     DialogModule,
-    BrowserAnimationsModule
+    BrowserAnimationsModule,
+    FileUploadModule
   ],
   providers: [],
   bootstrap: [AppComponent]
