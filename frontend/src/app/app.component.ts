@@ -1,4 +1,4 @@
-import {Component} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {Filtro} from "./filtro.model";
 import {DocumentoService} from "./documento.service";
 import {Documento} from "./documento.model";
@@ -20,6 +20,9 @@ export class AppComponent {
     texto: '',
   }
 
+  @ViewChild('pdfViewer') pdfViewer: any;
+  termoBusca: string = '';
+
 
   documentos: Documento[] = [];
   showDialog: boolean = false;
@@ -27,7 +30,7 @@ export class AppComponent {
 
 
   constructor(private documentoService: DocumentoService,
-              private pdfService: NgxExtendedPdfViewerService) {
+              private ngxExtendedPdfViewerService: NgxExtendedPdfViewerService) {
   }
 
 
@@ -49,6 +52,9 @@ export class AppComponent {
     this.documentoService.visualizarFromUUID(uuid).subscribe(response => {
       this.pdfbase64 = response;
       this.showDialog = true;
+      setTimeout(() => {
+        this.pesquisarOcorrencias(this.filtro.texto);
+      }, 1000);
     })
   }
 
@@ -67,6 +73,23 @@ export class AppComponent {
         console.error('Erro ao enviar arquivo', err);
       }
     });
+  }
+
+  pesquisarOcorrencias(termo: string): void {
+    this.ngxExtendedPdfViewerService.find(termo, {
+      highlightAll: true,
+      findMultiple: true,
+      wholeWords: true,
+      useSecondaryFindcontroller: false
+    });
+  }
+
+  antetiorOcorrencia(termo: string): void {
+    this.ngxExtendedPdfViewerService.findPrevious();
+  }
+
+  proximaOcorrencia(termo: string): void {
+    this.ngxExtendedPdfViewerService.findNext();
   }
 
 

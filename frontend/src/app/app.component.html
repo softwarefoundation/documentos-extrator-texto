@@ -19,7 +19,9 @@
 
 
   <p-button (click)="pesquisar()">Pesquisar</p-button>
-  <input type="file" (change)="onFileSelected($event)" accept=".pdf" />
+  <input type="file" (change)="onFileSelected($event)" accept=".pdf"/>
+
+
 
   <p-table [value]="documentos" [tableStyle]="{ 'min-width': '50rem' }">
     <ng-template pTemplate="header">
@@ -44,6 +46,14 @@
 
 
   <p-dialog header="PDF Viewer" [modal]="true" [(visible)]="showDialog">
+
+    <input type="text" [(ngModel)]="termoBusca" placeholder="Digite um termo para buscar" />
+    <button (click)="pesquisarOcorrencias(termoBusca)">Buscar e Marcar</button>
+    <button (click)="antetiorOcorrencia(termoBusca)">Anterioe</button>
+    <button (click)="proximaOcorrencia(termoBusca)">Próxima</button>
+
+    <br/>
+
     <app-example-pdf-viewer></app-example-pdf-viewer>
   </p-dialog>
 
@@ -54,7 +64,8 @@
     [height]="'auto'"
     [showHandToolButton]="true"
     [textLayer]="true"
-    [enablePrint]="false">
+    [enablePrint]="false"
+    #pdfViewer>
   </ngx-extended-pdf-viewer>
 
 
