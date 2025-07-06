@@ -1,4 +1,4 @@
-import {Component, ViewChild} from '@angular/core';
+import {Component, ViewEncapsulation} from '@angular/core';
 import {Filtro} from "./filtro.model";
 import {DocumentoService} from "./documento.service";
 import {Documento} from "./documento.model";
@@ -9,24 +9,21 @@ import {NgxExtendedPdfViewerService} from "ngx-extended-pdf-viewer";
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],
   providers: [NgxExtendedPdfViewerService],
+  encapsulation: ViewEncapsulation.Emulated
 })
 export class AppComponent {
 
   title = 'frontend';
 
-  pdfbase64: string = "";
-
   filtro: Filtro = {
     texto: '',
   }
 
-  @ViewChild('pdfViewer') pdfViewer: any;
+  selectedUUID = "";
   termoBusca: string = '';
-
-
   documentos: Documento[] = [];
   showDialog: boolean = false;
-  visible: boolean = true;
+  pdfbase64: string = "";
 
 
   constructor(private documentoService: DocumentoService,
@@ -49,6 +46,7 @@ export class AppComponent {
   visualizar(uuid: string) {
     console.log('Visualizar por UUID: ', uuid);
 
+    this.selectedUUID = uuid;
     this.documentoService.visualizarFromUUID(uuid).subscribe(response => {
       this.pdfbase64 = response;
       this.showDialog = true;
@@ -58,16 +56,22 @@ export class AppComponent {
     })
   }
 
+
+  excluir(uuid: string) {
+    console.log('Excluir por UUID: ', uuid);
+    this.documentoService.deleteFromUUID(uuid).subscribe(response => {
+      this.pesquisar();
+    });
+  }
+
   onFileSelected(event: any) {
 
     console.log('Arquivo Selecionado...');
 
     const file: File = event.target.files[0];
-
     this.documentoService.uploadPdf(file).subscribe({
       next: (res) => {
-        console.log('Arquivo salvo com UUID:', res.uuid);
-        // this.uuidDoArquivo = res.uuid;
+        console.log('Arquivo salvo com UUID:', res);
       },
       error: (err) => {
         console.error('Erro ao enviar arquivo', err);
@@ -93,4 +97,25 @@ export class AppComponent {
   }
 
 
+  ArquivoAnterior(id: string): void {
+    const index = this.documentos.findIndex(doc => doc.id === id);
+    if (index > 0) {
+      let uuid = this.documentos[index - 1].id;
+      console.log('Documento anterior:', uuid);
+      this.visualizar(uuid);
+    } else {
+      console.log('Não há documento anterior.');
+    }
+  }
+
+  proximoArquivo(id: string): void {
+    const index = this.documentos.findIndex(doc => doc.id === id);
+    if (index !== -1 && index < this.documentos.length - 1) {
+      let uuid = this.documentos[index + 1].id;
+      console.log('Próximo documento:', uuid);
+      this.visualizar(uuid);
+    } else {
+      console.log('Não há próximo documento.');
+    }
+  }
 }

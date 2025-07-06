@@ -6,11 +6,22 @@ import io.minio.MakeBucketArgs;
 import io.minio.MinioClient;
 import io.minio.ObjectWriteResponse;
 import io.minio.PutObjectArgs;
+import io.minio.RemoveObjectArgs;
+import io.minio.errors.ErrorResponseException;
+import io.minio.errors.InsufficientDataException;
+import io.minio.errors.InternalException;
+import io.minio.errors.InvalidResponseException;
+import io.minio.errors.ServerException;
+import io.minio.errors.XmlParserException;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -62,4 +73,16 @@ public class MinioService {
                         .build()
         );
     }
+
+
+    public void excluirDocumento(final String uuid) {
+        try {
+            this.minioClient.removeObject(RemoveObjectArgs.builder()
+                    .bucket(bucketName).object(uuid).build());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }

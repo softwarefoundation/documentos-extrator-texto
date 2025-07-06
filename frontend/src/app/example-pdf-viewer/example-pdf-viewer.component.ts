@@ -1,4 +1,4 @@
-import {Component, ChangeDetectionStrategy} from '@angular/core';
+import {Component, ChangeDetectionStrategy, ViewEncapsulation} from '@angular/core';
 import {NgxExtendedPdfViewerModule, NgxExtendedPdfViewerService, pdfDefaultOptions} from 'ngx-extended-pdf-viewer';
 import {DialogModule} from "primeng/dialog";
 import {ButtonModule} from "primeng/button";
@@ -10,7 +10,8 @@ import {ButtonModule} from "primeng/button";
   standalone: true,
   imports: [NgxExtendedPdfViewerModule, DialogModule, ButtonModule],
   providers: [NgxExtendedPdfViewerService],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.Emulated
 })
 export class ExamplePdfViewerComponent {
   visible: boolean = true;

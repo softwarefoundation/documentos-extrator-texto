@@ -22,13 +22,12 @@
   <input type="file" (change)="onFileSelected($event)" accept=".pdf"/>
 
 
-
   <p-table [value]="documentos" [tableStyle]="{ 'min-width': '50rem' }">
     <ng-template pTemplate="header">
       <tr>
         <th>ID</th>
         <th>Arquivo</th>
-        <th>Conteúdo</th>
+        <!--        <th>Conteúdo</th>-->
         <th>Ação</th>
       </tr>
     </ng-template>
@@ -36,9 +35,10 @@
       <tr>
         <td>{{documento.id}}</td>
         <td>{{documento.fileName}}</td>
-        <td>{{documento.content}}</td>
+        <!--        <td>{{documento.content}}</td>-->
         <td>
           <p-button (click)="visualizar(documento.id)">Visualizar</p-button>
+          <p-button (click)="excluir(documento.id)" severity="danger">Excluir</p-button>
         </td>
       </tr>
     </ng-template>
@@ -47,11 +47,14 @@
 
   <p-dialog header="PDF Viewer" [modal]="true" [(visible)]="showDialog">
 
-    <input type="text" [(ngModel)]="termoBusca" placeholder="Digite um termo para buscar" />
-    <button (click)="pesquisarOcorrencias(termoBusca)">Buscar e Marcar</button>
-    <button (click)="antetiorOcorrencia(termoBusca)">Anterioe</button>
-    <button (click)="proximaOcorrencia(termoBusca)">Próxima</button>
+    <input type="text" [(ngModel)]="termoBusca" placeholder="Digite um termo para buscar"/>
+    <br/>
+    <p-button (click)="pesquisarOcorrencias(termoBusca)" [rounded]="true" size="small">Pesquisar</p-button>
+    <p-button (click)="antetiorOcorrencia(termoBusca)" [rounded]="true" size="small">Anterior</p-button>
+    <p-button (click)="proximaOcorrencia(termoBusca)" [rounded]="true" size="small">Próxima</p-button>
 
+    <p-button (click)="ArquivoAnterior(selectedUUID)" [rounded]="true" size="small">Arquivo Anterior</p-button>
+    <p-button (click)="proximoArquivo(selectedUUID)" [rounded]="true" size="small">Próximo Arquivo</p-button>
     <br/>
 
     <app-example-pdf-viewer></app-example-pdf-viewer>
@@ -64,8 +67,7 @@
     [height]="'auto'"
     [showHandToolButton]="true"
     [textLayer]="true"
-    [enablePrint]="false"
-    #pdfViewer>
+    [enablePrint]="false">
   </ngx-extended-pdf-viewer>
 
 

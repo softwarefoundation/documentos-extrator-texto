@@ -41,10 +41,12 @@ public class DocumentService {
     }
 
 
-
-
     public Documento processarArquivo(Documento documento) {
         return this.documentRepository.save(documento);
+    }
+
+    public void excluirArquivo(final String uui) {
+        this.documentRepository.deleteById(uui);
     }
 
 

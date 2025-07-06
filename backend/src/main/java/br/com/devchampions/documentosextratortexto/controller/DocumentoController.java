@@ -10,6 +10,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -23,7 +24,6 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
 
@@ -46,7 +46,7 @@ public class DocumentoController {
     }
 
     @PostMapping("/upload")
-    public ResponseEntity<Documento> upload(@RequestParam("file") MultipartFile file) throws Exception {
+    public ResponseEntity<String> upload(@RequestParam("file") MultipartFile file) throws Exception {
         String texto = this.tikaIntegrationService.extrairTextoDoDocumento(file);
 
         String uuid = UUID.randomUUID().toString();
@@ -59,7 +59,7 @@ public class DocumentoController {
 
         minioService.upload(uuid, file);
 
-        return ResponseEntity.ok(docResponse);
+        return ResponseEntity.ok(docResponse.getId());
     }
 
     @GetMapping("/download/{filename}")
@@ -93,6 +93,17 @@ public class DocumentoController {
                     .header(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_PLAIN_VALUE)
                     .body(base64Content);
         }
+    }
+
+
+    @DeleteMapping("/{uuid}")
+    public ResponseEntity<String> excluirDocumento(@PathVariable String uuid) {
+
+        System.out.println("Excluindo arquivo: " + uuid);
+
+        this.documentService.excluirArquivo(uuid);
+        this.minioService.excluirDocumento(uuid);
+        return ResponseEntity.noContent().build();
     }
 
     @PostMapping("/buscar-conteudo")

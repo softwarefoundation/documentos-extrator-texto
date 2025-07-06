@@ -24,10 +24,14 @@ export class DocumentoService {
   }
 
 
-  uploadPdf(arquivo: File): Observable<{ uuid: string }> {
+  uploadPdf(arquivo: File): Observable<string> {
     const formData = new FormData();
     formData.append('file', arquivo);
-    return this.httpClient.post<{ uuid: string }>(`${this.baseUrl}/upload`, formData);
+    return this.httpClient.post<string>(`${this.baseUrl}/upload`, formData);
+  }
+
+  deleteFromUUID(uuid: string): Observable<Object> {
+    return this.httpClient.delete(`${this.baseUrl}/${uuid}`);
   }
 
 }
