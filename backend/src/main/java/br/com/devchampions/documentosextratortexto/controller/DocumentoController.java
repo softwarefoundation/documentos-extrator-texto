@@ -5,7 +5,9 @@ import br.com.devchampions.documentosextratortexto.request.FiltroRequest;
 import br.com.devchampions.documentosextratortexto.service.DocumentService;
 import br.com.devchampions.documentosextratortexto.service.MinioService;
 import br.com.devchampions.documentosextratortexto.service.TikaIntegrationService;
+import org.apache.commons.codec.binary.Base64OutputStream;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,8 +19,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.List;
 import java.util.UUID;
 
@@ -42,15 +47,17 @@ public class DocumentoController {
 
     @PostMapping("/upload")
     public ResponseEntity<Documento> upload(@RequestParam("file") MultipartFile file) throws Exception {
-        minioService.upload(file.getOriginalFilename(), file.getInputStream(), file.getContentType());
         String texto = this.tikaIntegrationService.extrairTextoDoDocumento(file);
 
+        String uuid = UUID.randomUUID().toString();
         Documento document = new Documento();
-        document.setId(UUID.randomUUID().toString());
+        document.setId(uuid);
         document.setFileName(file.getOriginalFilename());
         document.setContent(texto);
 
-        Documento docResponse = this.documentService.salvar(document);
+        Documento docResponse = this.documentService.processarArquivo(document);
+
+        minioService.upload(uuid, file);
 
         return ResponseEntity.ok(docResponse);
     }
@@ -62,6 +69,30 @@ public class DocumentoController {
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + filename + "\"")
                 .body(content);
+    }
+
+    @GetMapping("/download/base64/{uuid}")
+    public ResponseEntity<String> downloadBase64(@PathVariable String uuid) throws Exception {
+
+        System.out.println("Buscando arquivo: " + uuid);
+
+        try (InputStream is = minioService.download(uuid); ByteArrayOutputStream baos = new ByteArrayOutputStream(); Base64OutputStream b64os = new Base64OutputStream(baos)) {
+
+            byte[] buffer = new byte[1024];
+            int bytesRead;
+
+            while ((bytesRead = is.read(buffer)) != -1) {
+                b64os.write(buffer, 0, bytesRead);
+            }
+
+            b64os.close();
+
+            String base64Content = baos.toString(StandardCharsets.ISO_8859_1.name());
+
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_PLAIN_VALUE)
+                    .body(base64Content);
+        }
     }
 
     @PostMapping("/buscar-conteudo")

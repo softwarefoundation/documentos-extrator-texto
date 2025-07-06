@@ -1,10 +1,18 @@
 package br.com.devchampions.documentosextratortexto.service;
 
-import io.minio.*;
+import io.minio.BucketExistsArgs;
+import io.minio.GetObjectArgs;
+import io.minio.MakeBucketArgs;
+import io.minio.MinioClient;
+import io.minio.ObjectWriteResponse;
+import io.minio.PutObjectArgs;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class MinioService {
@@ -18,28 +26,40 @@ public class MinioService {
         this.minioClient = minioClient;
     }
 
-    public void upload(String filename, InputStream data, String contentType) throws Exception {
+    public void upload(String uuid, MultipartFile file) throws Exception {
         boolean found = minioClient.bucketExists(BucketExistsArgs.builder().bucket(bucketName).build());
         if (!found) {
             minioClient.makeBucket(MakeBucketArgs.builder().bucket(bucketName).build());
         }
 
-        minioClient.putObject(
-            PutObjectArgs.builder()
-                .bucket(bucketName)
-                .object(filename)
-                .stream(data, -1, 10485760)
-                .contentType(contentType)
-                .build()
+
+        Map<String, String> tags = new HashMap<>();
+        tags.put("fileName", file.getOriginalFilename());
+        tags.put("fileType", file.getContentType());
+
+        ObjectWriteResponse response = minioClient.putObject(
+                PutObjectArgs.builder()
+                        .bucket(bucketName)
+                        .object(uuid)
+                        .tags(tags)
+                        .stream(file.getInputStream(), -1, 10485760)
+                        .contentType(file.getContentType())
+                        .build()
         );
+
+        String etag = response.etag();
+        String object = response.object();
+
+        System.out.println("E-TAG: " + etag);
+        System.out.println("OBJECT: " + object);
     }
 
-    public InputStream download(String filename) throws Exception {
+    public InputStream download(String uuid) throws Exception {
         return minioClient.getObject(
-            GetObjectArgs.builder()
-                .bucket(bucketName)
-                .object(filename)
-                .build()
+                GetObjectArgs.builder()
+                        .bucket(bucketName)
+                        .object(uuid)
+                        .build()
         );
     }
 }

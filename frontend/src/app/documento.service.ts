@@ -9,17 +9,25 @@ import {Filtro} from "./filtro.model";
 export class DocumentoService {
 
 
-  baseUrl = "http://localhost:8080/documento/buscar-conteudo";
+  baseUrl = "http://localhost:8080/documento";
 
   constructor(private httpClient: HttpClient) {
   }
 
   buscarPorConteudo(filtro: Filtro): Observable<any> {
-    return this.httpClient.post<any>(this.baseUrl, filtro);
+    return this.httpClient.post<any>(`${this.baseUrl}/buscar-conteudo`, filtro);
   }
 
-  // visualizar(filtro: Filtro): Observable<any> {
-  //   return this.httpClient.get<any>(this.baseUrl, filtro);
-  // }
+  visualizarFromUUID(uuid: string): Observable<string> {
+    const url = `${this.baseUrl}/download/base64/${uuid}`;
+    return this.httpClient.get(url, {responseType: 'text'});
+  }
+
+
+  uploadPdf(arquivo: File): Observable<{ uuid: string }> {
+    const formData = new FormData();
+    formData.append('file', arquivo);
+    return this.httpClient.post<{ uuid: string }>(`${this.baseUrl}/upload`, formData);
+  }
 
 }

@@ -41,7 +41,9 @@ public class DocumentService {
     }
 
 
-    public Documento salvar(Documento documento) {
+
+
+    public Documento processarArquivo(Documento documento) {
         return this.documentRepository.save(documento);
     }
 

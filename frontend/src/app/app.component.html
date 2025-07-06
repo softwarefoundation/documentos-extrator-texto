@@ -19,6 +19,7 @@
 
 
   <p-button (click)="pesquisar()">Pesquisar</p-button>
+  <input type="file" (change)="onFileSelected($event)" accept=".pdf" />
 
 
   <p-table [value]="documentos" [tableStyle]="{ 'min-width': '50rem' }">
@@ -43,9 +44,12 @@
   </p-table>
 
 
-  <p-dialog  header="PDF Viewer" [modal]="true" [(visible)]="showDialog" ></p-dialog>
-  <app-example-pdf-viewer></app-example-pdf-viewer>
+  <p-dialog header="PDF Viewer" [modal]="true" [(visible)]="showDialog">
+    <app-example-pdf-viewer></app-example-pdf-viewer>
+  </p-dialog>
 
+
+  <div style="background-color: #1976d2; min-width: 1000px; min-height: 2px"></div>
   <ngx-extended-pdf-viewer
     [base64Src]="pdfbase64"
     [height]="'auto'"
@@ -53,7 +57,6 @@
     [textLayer]="true"
     [enablePrint]="false">
   </ngx-extended-pdf-viewer>
-
 
 
 </div>

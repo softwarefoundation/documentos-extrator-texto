@@ -12,6 +12,7 @@ import {TableModule} from 'primeng/table';
 import {NgxExtendedPdfViewerModule} from "ngx-extended-pdf-viewer";
 import {ExamplePdfViewerComponent} from "./example-pdf-viewer/example-pdf-viewer.component";
 import {DialogModule} from "primeng/dialog";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
 @NgModule({
   declarations: [
@@ -28,7 +29,8 @@ import {DialogModule} from "primeng/dialog";
     TableModule,
     NgxExtendedPdfViewerModule,
     ExamplePdfViewerComponent,
-    DialogModule
+    DialogModule,
+    BrowserAnimationsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
