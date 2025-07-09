@@ -76,18 +76,18 @@ public class DocumentoController {
 
         System.out.println("Buscando arquivo: " + uuid);
 
-        try (InputStream is = minioService.download(uuid); ByteArrayOutputStream baos = new ByteArrayOutputStream(); Base64OutputStream b64os = new Base64OutputStream(baos)) {
+        try (InputStream is = minioService.download(uuid);
+             ByteArrayOutputStream baos = new ByteArrayOutputStream();
+             Base64OutputStream b64os = new Base64OutputStream(baos)) {
 
-            byte[] buffer = new byte[1024];
+            byte[] buffer = new byte[8192];
             int bytesRead;
 
             while ((bytesRead = is.read(buffer)) != -1) {
                 b64os.write(buffer, 0, bytesRead);
             }
 
-            b64os.close();
-
-            String base64Content = baos.toString(StandardCharsets.ISO_8859_1.name());
+            String base64Content = new String(baos.toByteArray(), StandardCharsets.US_ASCII);
 
             return ResponseEntity.ok()
                     .header(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_PLAIN_VALUE)
