@@ -5,10 +5,15 @@ import br.com.devchampions.documentosextratortexto.request.FiltroRequest;
 import br.com.devchampions.documentosextratortexto.service.DocumentService;
 import br.com.devchampions.documentosextratortexto.service.MinioService;
 import br.com.devchampions.documentosextratortexto.service.TikaIntegrationService;
+import br.com.devchampions.documentosextratortexto.util.DocumentoContentType;
+import br.com.devchampions.documentosextratortexto.util.converter.DocumentoConverter;
+import io.minio.StatObjectResponse;
 import org.apache.commons.codec.binary.Base64OutputStream;
+import org.apache.http.entity.ContentType;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.MimeType;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,9 +25,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URLConnection;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.UUID;
@@ -76,22 +83,61 @@ public class DocumentoController {
 
         System.out.println("Buscando arquivo: " + uuid);
 
-        try (InputStream is = minioService.download(uuid);
-             ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        try (InputStream originalFile = minioService.download(uuid)) {
+
+            InputStream pdfInputStream;
+
+            StatObjectResponse response = minioService.getFileMetadata(uuid);
+
+            if (DocumentoContentType.APPLICATION_PDF.equalsIgnoreCase(response.contentType())) {
+                pdfInputStream = originalFile;
+            } else if (DocumentoContentType.APPLICATION_PDF.equalsIgnoreCase(response.contentType())) {
+                pdfInputStream = DocumentoConverter.convertDocToPdf(originalFile);
+            } else {
+                return ResponseEntity.badRequest()
+                        .body("Tipo de arquivo não suportado: ".concat(response.contentType()));
+            }
+
+            // Converte o PDF para base64
+            String base64Content = convertToBase64(pdfInputStream);
+
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_PLAIN_VALUE)
+                    .header("Content-Disposition", "inline; filename=\"" + uuid + ".pdf\"")
+                    .body(base64Content);
+
+        }
+
+    }
+
+
+    private String getFileExtension(InputStream originalFile) throws IOException {
+
+        ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+        int nRead;
+        byte[] data = new byte[16384]; // 16KB
+        while ((nRead = originalFile.read(data, 0, data.length)) != -1) {
+            buffer.write(data, 0, nRead);
+        }
+
+        String mimeType = URLConnection.guessContentTypeFromStream(new ByteArrayInputStream(buffer.toByteArray()));
+
+        return mimeType;
+    }
+
+
+    private String convertToBase64(InputStream inputStream) throws IOException {
+        try (ByteArrayOutputStream baos = new ByteArrayOutputStream();
              Base64OutputStream b64os = new Base64OutputStream(baos)) {
 
             byte[] buffer = new byte[8192];
             int bytesRead;
 
-            while ((bytesRead = is.read(buffer)) != -1) {
+            while ((bytesRead = inputStream.read(buffer)) != -1) {
                 b64os.write(buffer, 0, bytesRead);
             }
 
-            String base64Content = new String(baos.toByteArray(), StandardCharsets.US_ASCII);
-
-            return ResponseEntity.ok()
-                    .header(HttpHeaders.CONTENT_TYPE, MediaType.TEXT_PLAIN_VALUE)
-                    .body(base64Content);
+            return new String(baos.toByteArray(), StandardCharsets.US_ASCII);
         }
     }
 

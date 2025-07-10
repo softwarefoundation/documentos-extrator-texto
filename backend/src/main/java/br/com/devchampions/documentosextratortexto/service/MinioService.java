@@ -7,6 +7,8 @@ import io.minio.MinioClient;
 import io.minio.ObjectWriteResponse;
 import io.minio.PutObjectArgs;
 import io.minio.RemoveObjectArgs;
+import io.minio.StatObjectArgs;
+import io.minio.StatObjectResponse;
 import io.minio.errors.ErrorResponseException;
 import io.minio.errors.InsufficientDataException;
 import io.minio.errors.InternalException;
@@ -74,6 +76,14 @@ public class MinioService {
         );
     }
 
+    public StatObjectResponse getFileMetadata(String uuid) throws Exception {
+        return minioClient.statObject(
+                StatObjectArgs.builder()
+                        .bucket(bucketName)
+                        .object(uuid)
+                        .build()
+        );
+    }
 
     public void excluirDocumento(final String uuid) {
         try {
