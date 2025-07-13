@@ -10,7 +10,7 @@ import {ButtonModule} from 'primeng/button';
 import {HttpClientModule} from "@angular/common/http";
 import {TableModule} from 'primeng/table';
 import {NgxExtendedPdfViewerModule} from "ngx-extended-pdf-viewer";
-import {ExamplePdfViewerComponent} from "./example-pdf-viewer/example-pdf-viewer.component";
+import {PdfViewerComponent} from "./pdf-viewer/pdf-viewer.component";
 import {DialogModule} from "primeng/dialog";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {FileUploadModule} from "primeng/fileupload";
@@ -31,7 +31,7 @@ import {MessageService} from "primeng/api";
     HttpClientModule,
     TableModule,
     NgxExtendedPdfViewerModule,
-    ExamplePdfViewerComponent,
+    PdfViewerComponent,
     DialogModule,
     BrowserAnimationsModule,
     FileUploadModule,

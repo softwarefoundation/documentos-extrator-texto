@@ -4,6 +4,7 @@ import {DocumentoService} from "./documento.service";
 import {Documento} from "./documento.model";
 import {NgxExtendedPdfViewerService} from "ngx-extended-pdf-viewer";
 import {MessageService} from "primeng/api";
+import {FileValidator} from "./util/FileValidator";
 
 @Component({
   selector: 'app-root',
@@ -72,9 +73,33 @@ export class AppComponent {
     console.log('Arquivo Selecionado...');
 
     const file: File = event.target.files[0];
+
+    if (!FileValidator.isValidType(file)) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Erro',
+        detail: `Tipo de arquivo não permitido. Tipo atual: ${file.type}`
+      });
+
+      event.target.value = '';
+      return;
+    }
+
+
+    if (!FileValidator.isValidSize(file)) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Erro',
+        detail: `Tamanho máximo permitido é 40MB. Arquivo atual: ${(file.size / 1024 / 1024).toFixed(2)}MB`
+      });
+
+      event.target.value = '';
+      return;
+    }
+
     this.documentoService.uploadPdf(file).subscribe({
       next: (res) => {
-        this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: 'Upload realizado com sucesso' });
+        this.messageService.add({severity: 'success', summary: 'Sucesso', detail: 'Upload realizado com sucesso'});
         console.log('Arquivo salvo com UUID:', res);
       },
       error: (err) => {

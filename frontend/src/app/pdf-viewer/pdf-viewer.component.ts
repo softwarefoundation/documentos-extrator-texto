@@ -4,16 +4,16 @@ import {DialogModule} from "primeng/dialog";
 import {ButtonModule} from "primeng/button";
 
 @Component({
-  selector: 'app-example-pdf-viewer',
-  templateUrl: './example-pdf-viewer.component.html',
-  styleUrls: ['./example-pdf-viewer.component.css'],
+  selector: 'app-pdf-viewer',
+  templateUrl: './pdf-viewer.component.html',
+  styleUrls: ['./pdf-viewer.component.css'],
   standalone: true,
   imports: [NgxExtendedPdfViewerModule, DialogModule, ButtonModule],
   providers: [NgxExtendedPdfViewerService],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.Emulated
 })
-export class ExamplePdfViewerComponent {
+export class PdfViewerComponent {
   visible: boolean = true;
   showDialog: boolean = true;
   /** In most cases, you don't need the NgxExtendedPdfViewerService. It allows you
