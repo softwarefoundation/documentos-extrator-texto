@@ -14,6 +14,8 @@ import {ExamplePdfViewerComponent} from "./example-pdf-viewer/example-pdf-viewer
 import {DialogModule} from "primeng/dialog";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {FileUploadModule} from "primeng/fileupload";
+import {ToastModule} from "primeng/toast";
+import {MessageService} from "primeng/api";
 
 @NgModule({
   declarations: [
@@ -32,9 +34,10 @@ import {FileUploadModule} from "primeng/fileupload";
     ExamplePdfViewerComponent,
     DialogModule,
     BrowserAnimationsModule,
-    FileUploadModule
+    FileUploadModule,
+    ToastModule
   ],
-  providers: [],
+  providers: [MessageService],
   bootstrap: [AppComponent]
 })
 export class AppModule {

@@ -3,6 +3,7 @@ import {Filtro} from "./filtro.model";
 import {DocumentoService} from "./documento.service";
 import {Documento} from "./documento.model";
 import {NgxExtendedPdfViewerService} from "ngx-extended-pdf-viewer";
+import {MessageService} from "primeng/api";
 
 @Component({
   selector: 'app-root',
@@ -27,7 +28,9 @@ export class AppComponent {
 
 
   constructor(private documentoService: DocumentoService,
-              private ngxExtendedPdfViewerService: NgxExtendedPdfViewerService) {
+              private ngxExtendedPdfViewerService: NgxExtendedPdfViewerService,
+              private messageService: MessageService
+  ) {
   }
 
 
@@ -71,10 +74,12 @@ export class AppComponent {
     const file: File = event.target.files[0];
     this.documentoService.uploadPdf(file).subscribe({
       next: (res) => {
+        this.messageService.add({ severity: 'success', summary: 'Sucesso', detail: 'Upload realizado com sucesso' });
         console.log('Arquivo salvo com UUID:', res);
       },
       error: (err) => {
-        console.error('Erro ao enviar arquivo', err);
+        this.messageService.add({severity: 'error', summary: 'Erro', detail: err.error.value});
+        console.log('Erro ao enviar arquivo', err);
       }
     });
   }

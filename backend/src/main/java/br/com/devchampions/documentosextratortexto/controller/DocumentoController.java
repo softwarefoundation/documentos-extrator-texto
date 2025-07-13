@@ -1,16 +1,20 @@
 package br.com.devchampions.documentosextratortexto.controller;
 
 import br.com.devchampions.documentosextratortexto.dto.Documento;
+import br.com.devchampions.documentosextratortexto.exceptions.BusinessException;
 import br.com.devchampions.documentosextratortexto.request.FiltroRequest;
+import br.com.devchampions.documentosextratortexto.response.ResponseMessage;
 import br.com.devchampions.documentosextratortexto.service.DocumentService;
 import br.com.devchampions.documentosextratortexto.service.MinioService;
 import br.com.devchampions.documentosextratortexto.service.TikaIntegrationService;
 import br.com.devchampions.documentosextratortexto.util.DocumentoContentType;
 import br.com.devchampions.documentosextratortexto.util.converter.DocumentoConverter;
+import br.com.devchampions.documentosextratortexto.validation.DocumentoValidador;
 import io.minio.StatObjectResponse;
 import org.apache.commons.codec.binary.Base64OutputStream;
 import org.apache.http.entity.ContentType;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.MimeType;
@@ -53,20 +57,30 @@ public class DocumentoController {
     }
 
     @PostMapping("/upload")
-    public ResponseEntity<String> upload(@RequestParam("file") MultipartFile file) throws Exception {
-        String texto = this.tikaIntegrationService.extrairTextoDoDocumento(file);
+    public ResponseEntity<ResponseMessage> upload(@RequestParam("file") MultipartFile file) throws Exception {
 
-        String uuid = UUID.randomUUID().toString();
-        Documento document = new Documento();
-        document.setId(uuid);
-        document.setFileName(file.getOriginalFilename());
-        document.setContent(texto);
 
-        Documento docResponse = this.documentService.processarArquivo(document);
+        try {
+            DocumentoValidador.validarTipoDocumento(file);
 
-        minioService.upload(uuid, file);
+            String texto = this.tikaIntegrationService.extrairTextoDoDocumento(file);
 
-        return ResponseEntity.ok(docResponse.getId());
+            String uuid = UUID.randomUUID().toString();
+            Documento document = new Documento();
+            document.setId(uuid);
+            document.setFileName(file.getOriginalFilename());
+            document.setContent(texto);
+
+            Documento docResponse = this.documentService.processarArquivo(document);
+
+            minioService.upload(uuid, file);
+
+            return ResponseEntity.ok(new ResponseMessage(docResponse.getId()));
+        } catch (BusinessException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseMessage(e.getMessage()));
+        }
+
+
     }
 
     @GetMapping("/download/{filename}")

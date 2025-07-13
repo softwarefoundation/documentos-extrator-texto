@@ -3,6 +3,11 @@ spring:
     name: documentos-extrator-texto
   elasticsearch:
     uris: http://localhost:9200
+  servlet:
+    multipart:
+      file-size-threshold: 42MB
+      max-request-size: 42MB
+      max-file-size: 42MB
 #    username: elastic
 #    password: admin
 
