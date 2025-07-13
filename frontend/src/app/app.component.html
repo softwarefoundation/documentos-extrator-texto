@@ -9,7 +9,7 @@
 </div>
 
 <div class="content" role="main">
-  <p-toast />
+  <p-toast/>
 
   <form>
 
@@ -19,7 +19,8 @@
 
 
   <p-button (click)="pesquisar()">Pesquisar</p-button>
-  <input type="file" (change)="onFileSelected($event)" accept=".pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx, .epub, .jpg, .jpeg, .png, .gif, .bmp, .heic"/>
+  <input type="file" (change)="onFileSelected($event)"
+         accept=".pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx, .epub, .jpg, .jpeg, .png, .gif, .bmp, .heic"/>
 
 
   <p-table [value]="documentos" [tableStyle]="{ 'min-width': '50rem' }">

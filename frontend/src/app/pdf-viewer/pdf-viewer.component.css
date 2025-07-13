@@ -1,3 +1,4 @@
-ngx-extended-pdf-viewer .textLayer .highlight.selected {
-  background-color: rgba(81, 247, 4, 0.23) !important;
+/* Cor da ocorrência selecionada*/
+::ng-deep  ngx-extended-pdf-viewer .textLayer .highlight.selected {
+  background-color: rgba(255, 213, 0, 0.5) !important;
 }
