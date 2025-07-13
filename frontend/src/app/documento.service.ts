@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {from, Observable, switchMap} from "rxjs";
+import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {catchError, from, map, Observable, switchMap, tap, throwError} from "rxjs";
 import {Filtro} from "./filtro.model";
 
 @Injectable({
@@ -37,18 +37,27 @@ export class DocumentoService {
 
   uploadFile(file: File): Observable<void> {
     return this.getPresignedUrl().pipe(
-      switchMap(presignedUrl => this.uploadToMinIO(presignedUrl, file))
+      tap(presignedUrl => {
+        // console.log('URL Pré-Assinada:', presignedUrl);
+      }),
+      switchMap(presignedUrl => this.uploadToMinIO(presignedUrl, file)),
+      catchError(err => {
+        console.error('Erro no upload:', err);
+        return throwError(() => new Error('Upload falhou'));
+      })
     );
   }
 
   private getPresignedUrl(): Observable<string> {
     const url = `${this.baseUrl}/presigned-url`;
-    return this.httpClient.get<string>(url);
+    return this.httpClient.get<{ value: string }>(url).pipe(map(reponse => reponse.value));
   }
 
   private uploadToMinIO(presignedUrl: string, file: File): Observable<any> {
-
     console.log('URL: ', presignedUrl);
+    const headers = new HttpHeaders({
+      'Content-Type': file.type
+    });
 
     return from(
       fetch(presignedUrl, {
@@ -63,8 +72,9 @@ export class DocumentoService {
         }
       })
     );
-  }
 
+    // return this.httpClient.put(presignedUrl, file, {headers, responseType: 'text'});
+  }
 
 
 }

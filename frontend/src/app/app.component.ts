@@ -102,7 +102,14 @@ export class AppComponent {
     if (file.type == 'video/mp4') {
       console.log('UPLOAD VIDEO: ', file.type)
 
-      this.documentoService.uploadFile(file);
+      this.documentoService.uploadFile(file).subscribe({
+        next: () => {
+          this.messageService.add({severity: 'success', summary: 'Sucesso', detail: 'Upload realizado para o MinIO'});
+        },
+        error: err => {
+          this.messageService.add({severity: 'error', summary: 'Erro', detail: err.error.value});
+        }
+      });
 
       return;
     }
