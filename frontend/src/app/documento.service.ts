@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
-import {Observable} from "rxjs";
+import {from, Observable, switchMap} from "rxjs";
 import {Filtro} from "./filtro.model";
 
 @Injectable({
@@ -33,5 +33,38 @@ export class DocumentoService {
   deleteFromUUID(uuid: string): Observable<Object> {
     return this.httpClient.delete(`${this.baseUrl}/${uuid}`);
   }
+
+
+  uploadFile(file: File): Observable<void> {
+    return this.getPresignedUrl().pipe(
+      switchMap(presignedUrl => this.uploadToMinIO(presignedUrl, file))
+    );
+  }
+
+  private getPresignedUrl(): Observable<string> {
+    const url = `${this.baseUrl}/presigned-url`;
+    return this.httpClient.get<string>(url);
+  }
+
+  private uploadToMinIO(presignedUrl: string, file: File): Observable<any> {
+
+    console.log('URL: ', presignedUrl);
+
+    return from(
+      fetch(presignedUrl, {
+        method: 'PUT',
+        body: file,
+        headers: {
+          'Content-Type': file.type
+        }
+      }).then(response => {
+        if (!response.ok) {
+          throw new Error('Falha no upload');
+        }
+      })
+    );
+  }
+
+
 
 }

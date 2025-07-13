@@ -97,6 +97,17 @@ export class AppComponent {
       return;
     }
 
+    console.log('ARQUIVO: ', file.type)
+
+    if (file.type == 'video/mp4') {
+      console.log('UPLOAD VIDEO: ', file.type)
+
+      this.documentoService.uploadFile(file);
+
+      return;
+    }
+
+
     this.documentoService.uploadPdf(file).subscribe({
       next: (res) => {
         this.messageService.add({severity: 'success', summary: 'Sucesso', detail: 'Upload realizado com sucesso'});

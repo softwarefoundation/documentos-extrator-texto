@@ -1,7 +1,9 @@
 package br.com.devchampions.documentosextratortexto.service;
 
+import br.com.devchampions.documentosextratortexto.exceptions.BusinessException;
 import io.minio.BucketExistsArgs;
 import io.minio.GetObjectArgs;
+import io.minio.GetPresignedObjectUrlArgs;
 import io.minio.MakeBucketArgs;
 import io.minio.MinioClient;
 import io.minio.ObjectWriteResponse;
@@ -15,9 +17,13 @@ import io.minio.errors.InternalException;
 import io.minio.errors.InvalidResponseException;
 import io.minio.errors.ServerException;
 import io.minio.errors.XmlParserException;
+import io.minio.http.Method;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -26,6 +32,8 @@ import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class MinioService {
@@ -91,6 +99,23 @@ public class MinioService {
                     .bucket(bucketName).object(uuid).build());
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+
+    public String getPresignedUrl() {
+        try {
+            return minioClient.getPresignedObjectUrl(
+                    GetPresignedObjectUrlArgs.builder()
+                            .method(Method.PUT)
+                            .bucket(bucketName)
+                            .object(UUID.randomUUID().toString())
+                            .expiry(60, TimeUnit.MINUTES) // URL válida por 1 hora
+                            .build()
+            );
+
+        } catch (Exception e) {
+            throw new BusinessException(e.getMessage());
         }
     }
 

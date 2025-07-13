@@ -211,5 +211,15 @@ public class DocumentoController {
         }
     }
 
+    @GetMapping("/presigned-url")
+    public ResponseEntity<ResponseMessage> getPresignedUrl() {
+        try {
+            String presignedUrl = this.minioService.getPresignedUrl();
+            return ResponseEntity.ok(new ResponseMessage(presignedUrl));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseMessage(e.getMessage()));
+        }
+    }
+
 
 }
