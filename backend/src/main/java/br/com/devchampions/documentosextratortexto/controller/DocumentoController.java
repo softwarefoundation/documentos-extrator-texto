@@ -7,17 +7,15 @@ import br.com.devchampions.documentosextratortexto.response.ResponseMessage;
 import br.com.devchampions.documentosextratortexto.service.DocumentService;
 import br.com.devchampions.documentosextratortexto.service.MinioService;
 import br.com.devchampions.documentosextratortexto.service.TikaIntegrationService;
-import br.com.devchampions.documentosextratortexto.util.DocumentoContentType;
+import br.com.devchampions.documentosextratortexto.util.DocumentoMIMEType;
 import br.com.devchampions.documentosextratortexto.util.converter.DocumentoConverter;
 import br.com.devchampions.documentosextratortexto.validation.DocumentoValidador;
 import io.minio.StatObjectResponse;
 import org.apache.commons.codec.binary.Base64OutputStream;
-import org.apache.http.entity.ContentType;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.MimeType;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -103,9 +101,9 @@ public class DocumentoController {
 
             StatObjectResponse response = minioService.getFileMetadata(uuid);
 
-            if (DocumentoContentType.APPLICATION_PDF.equalsIgnoreCase(response.contentType())) {
+            if (DocumentoMIMEType.APPLICATION_PDF.equalsIgnoreCase(response.contentType())) {
                 pdfInputStream = originalFile;
-            } else if (DocumentoContentType.APPLICATION_PDF.equalsIgnoreCase(response.contentType())) {
+            } else if (DocumentoMIMEType.DOCX.equalsIgnoreCase(response.contentType())) {
                 pdfInputStream = DocumentoConverter.convertDocToPdf(originalFile);
             } else {
                 return ResponseEntity.badRequest()

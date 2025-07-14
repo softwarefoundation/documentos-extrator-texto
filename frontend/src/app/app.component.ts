@@ -57,6 +57,16 @@ export class AppComponent {
       setTimeout(() => {
         this.pesquisarOcorrencias(this.filtro.texto);
       }, 1000);
+    }, error => {
+
+      console.log('ERRO 001: ', error);
+
+
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Erro',
+        detail: error.error
+      });
     })
   }
 
