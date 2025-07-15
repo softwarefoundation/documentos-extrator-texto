@@ -48,11 +48,8 @@
   </p-table>
 
 
-  <p-dialog header="PDF Viewer" [modal]="true" [(visible)]="showDialog">
+  <p-dialog header="Visualizador de documentos" [modal]="true" [(visible)]="showDialog">
 
-    <input type="text" [(ngModel)]="termoBusca" placeholder="Digite um termo para buscar"/>
-    <br/>
-    <p-button (click)="pesquisarOcorrencias(termoBusca)" [rounded]="true" size="small">Pesquisar</p-button>
     <p-button (click)="antetiorOcorrencia(termoBusca)" [rounded]="true" size="small">Anterior</p-button>
     <p-button (click)="proximaOcorrencia(termoBusca)" [rounded]="true" size="small">Próxima</p-button>
 
