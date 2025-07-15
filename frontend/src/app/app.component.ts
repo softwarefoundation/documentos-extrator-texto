@@ -176,4 +176,13 @@ export class AppComponent {
       console.log('Não há próximo documento.');
     }
   }
+
+  downloadDocumento(uuid: string) {
+
+    this.documentoService.getUrlPreAssinadaParaDownload(uuid).subscribe(url => {
+      console.log('URL: ', url);
+      window.open(url, '_blank');
+    });
+
+  }
 }

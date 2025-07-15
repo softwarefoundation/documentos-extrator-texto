@@ -107,7 +107,7 @@ public class DocumentoController {
                 pdfInputStream = DocumentoConverter.convertDocToPdf(originalFile);
             } else {
                 return ResponseEntity.badRequest()
-                        .body("Tipo de arquivo não suportado: ".concat(response.contentType()));
+                        .body("Tipo de arquivo não suportado para visualização: ".concat(response.contentType()));
             }
 
             // Converte o PDF para base64
@@ -209,10 +209,22 @@ public class DocumentoController {
         }
     }
 
-    @GetMapping("/presigned-url")
+    @GetMapping("/url-pre-assinada-para-upload")
     public ResponseEntity<ResponseMessage> getPresignedUrl() {
         try {
-            String presignedUrl = this.minioService.getPresignedUrl();
+            String presignedUrl = this.minioService.getUrlPreAssinadaParaUpload();
+            return ResponseEntity.ok(new ResponseMessage(presignedUrl));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseMessage(e.getMessage()));
+        }
+    }
+
+
+    @GetMapping("/url-pre-assinada-para-download/{uuid}")
+    public ResponseEntity<ResponseMessage> getPresignedUrlPorUuid(@PathVariable String uuid) {
+        try {
+            String presignedUrl = this.minioService.getUrlPreAssinadaParaDownload(uuid);
+            System.out.println("URL: ".concat(presignedUrl));
             return ResponseEntity.ok(new ResponseMessage(presignedUrl));
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseMessage(e.getMessage()));

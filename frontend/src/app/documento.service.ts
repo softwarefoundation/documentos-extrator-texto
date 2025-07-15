@@ -49,7 +49,12 @@ export class DocumentoService {
   }
 
   private getPresignedUrl(): Observable<string> {
-    const url = `${this.baseUrl}/presigned-url`;
+    const url = `${this.baseUrl}/url-pre-assinada-para-upload`;
+    return this.httpClient.get<{ value: string }>(url).pipe(map(reponse => reponse.value));
+  }
+
+  getUrlPreAssinadaParaDownload(uuid: string): Observable<string> {
+    const url = `${this.baseUrl}/url-pre-assinada-para-download/${uuid}`;
     return this.httpClient.get<{ value: string }>(url).pipe(map(reponse => reponse.value));
   }
 
