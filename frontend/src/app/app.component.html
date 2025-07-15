@@ -38,10 +38,10 @@
         <td>{{documento.fileName}}</td>
         <!--        <td>{{documento.content}}</td>-->
         <td>
-          <p-button icon="pi pi-eye" (click)="visualizar(documento.id)"/>
-          <p-button icon="pi pi-download"
+          <p-button [rounded]="true" [text]="true" icon="pi pi-eye" (click)="visualizar(documento.id)"/>
+          <p-button [rounded]="true" [text]="true" icon="pi pi-download"
                     (click)="downloadDocumento(documento.id)"/>
-          <p-button icon="pi pi-trash" (click)="excluir(documento.id)" severity="danger"/>
+          <p-button [rounded]="true" [text]="true" icon="pi pi-trash" (click)="excluir(documento.id)" severity="danger"/>
         </td>
       </tr>
     </ng-template>
