@@ -18,7 +18,7 @@
   </form>
 
 
-  <p-button (click)="pesquisar()">Pesquisar</p-button>
+  <p-button label="Pesquisar" icon="pi pi-search" iconPos="right" (click)="pesquisar()"/>
   <input type="file" (change)="onFileSelected($event)"
          accept=".pdf, .doc, .docx, .xls, .xlsx, .ppt, .pptx, .epub, .jpg, .jpeg, .png, .gif, .bmp, .heic"/>
 
@@ -41,7 +41,8 @@
           <p-button [rounded]="true" [text]="true" icon="pi pi-eye" (click)="visualizar(documento.id)"/>
           <p-button [rounded]="true" [text]="true" icon="pi pi-download"
                     (click)="downloadDocumento(documento.id)"/>
-          <p-button [rounded]="true" [text]="true" icon="pi pi-trash" (click)="excluir(documento.id)" severity="danger"/>
+          <p-button [rounded]="true" [text]="true" icon="pi pi-trash" (click)="excluir(documento.id)"
+                    severity="danger"/>
         </td>
       </tr>
     </ng-template>
