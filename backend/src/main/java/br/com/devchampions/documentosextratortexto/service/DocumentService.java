@@ -6,6 +6,7 @@ import br.com.devchampions.documentosextratortexto.repository.DocumentRepository
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch._types.ElasticsearchException;
 import co.elastic.clients.elasticsearch._types.query_dsl.FuzzyQuery;
+import co.elastic.clients.elasticsearch._types.query_dsl.MatchPhraseQuery;
 import co.elastic.clients.elasticsearch._types.query_dsl.MatchQuery;
 import co.elastic.clients.elasticsearch._types.query_dsl.Query;
 import co.elastic.clients.elasticsearch._types.query_dsl.QueryBuilders;
@@ -54,21 +55,27 @@ public class DocumentService {
      * Busca documentos por conteúdo
      */
     public List<Documento> buscarPorConteudo(String conteudo) throws IOException {
-        Query query1 = QueryBuilders.match()
-                .field("content")
-                .query(conteudo)
-                .build()._toQuery();
 
-        MatchQuery query2 = MatchQuery.of(b -> b
+        MatchPhraseQuery phraseQuery = MatchPhraseQuery.of(b -> b
                 .field("content")
                 .query(conteudo)
+                .analyzer("standard")
+        );
+
+        MatchQuery matchQuery = MatchQuery.of(b -> b
+                .field("content")
+                .query(conteudo)
+                .analyzer("standard")
+                .fuzziness("AUTO")
         );
 
         SearchRequest request = SearchRequest.of(s -> s
                 .index(INDEX_NAME)
-                .query(query2)
+//                .query(phraseQuery)
+                .query(matchQuery)
                 .size(100)
         );
+
 
         SearchResponse<Documento> response = elasticsearchClient.search(request, Documento.class);
 

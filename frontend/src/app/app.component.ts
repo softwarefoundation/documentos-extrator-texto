@@ -140,7 +140,7 @@ export class AppComponent {
   pesquisarOcorrencias(termo: string): void {
     this.ngxExtendedPdfViewerService.find(termo, {
       highlightAll: true,
-      findMultiple: true,
+      findMultiple: false,
       wholeWords: true,
       useSecondaryFindcontroller: false
     });
